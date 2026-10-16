@@ -70,18 +70,18 @@ $('suggestBtn').onclick=()=>{
  const code=match?match.code:'GEN',label=match?match.label:'General / topic needs review',why=match?match.why:'The keywords did not clearly match a built-in topic rule, so manual subject analysis is recommended.';
  const ddc={MED:'610',TEC:'004',BUS:'650',EDU:'370',HIS:'900',LIT:'800',SCI:'500',LAW:'340',SOC:'300',ART:'700',GEN:''};
  const udc={MED:'61',TEC:'004',BUS:'005',EDU:'37',HIS:'94',LIT:'82',SCI:'5',LAW:'34',SOC:'3',ART:'7',GEN:''};
- const lcc={MED:'R',TEC:'QA76 (computing; verify subclass)',BUS:'HF',EDU:'L',HIS:'D',LIT:'Requires title/language/author-specific schedule review',SCI:'Q',LAW:'K',SOC:'H',ART:'N',GEN:''};
+ const lcc={MED:'R',TEC:'QA76',BUS:'HF',EDU:'L',HIS:'D',LIT:'',SCI:'Q',LAW:'K',SOC:'H',ART:'N',GEN:''};
  let draft='',detail='';
  if(scheme==='LIBRA-FACET'){draft='LIB-'+code+'-'+(code==='MED'?'HLT':code==='BUS'?'FIN':code==='LIT'?'LIT':code==='TEC'?'ICT':'TOP')+'-'+new Date().getFullYear()+'-'+author;detail='Local example pattern only. Use this only if your library has approved a consistent LIBRA-FACET schedule.'}
  else if(scheme==='DDC'&&ddc[code]){draft=ddc[code];detail='Broad Dewey area only; consult the current DDC schedules for the complete number.'}
  else if(scheme==='UDC'&&udc[code]){draft=udc[code];detail='Broad UDC area only; consult the current UDC tables for the complete number.'}
  else if(scheme==='LCC'&&lcc[code]){draft=lcc[code];detail='LCC class-area clue only, not a complete call number. The full class depends on the exact subject and book.'}
- else if(scheme==='NLM'&&code==='MED'){draft='W (broad medical class)';detail='NLM broad class only; consult the current NLM schedules for the exact class and book number.'}
+ else if(scheme==='NLM'&&code==='MED'){draft='W';detail='NLM broad class only; consult the current NLM schedules for the exact class and book number.'}
  else if(scheme==='OTHER'){draft='Manual review required';detail='Use the classification rules adopted by your library and record the system name.'}
  else {draft='';detail='This helper cannot safely map this topic to the selected scheme. Search an authoritative catalogue or consult the official schedule.'}
  currentClassDraft=draft;
  $('classResult').innerHTML='<b>Book:</b> '+escapeHTML(title||'Title not supplied')+'<br><b>Likely topic:</b> '+escapeHTML(label)+'<br><b>Selected system:</b> '+escapeHTML(schemeNames[scheme]||scheme)+'<br><b>Preliminary suggestion:</b> '+escapeHTML(draft||'No reliable automatic suggestion')+'<br><br><b>Why:</b> '+escapeHTML(why)+'<br><b>Next step:</b> '+escapeHTML(detail)+'<br><br><i>This is a local keyword helper, not an AI model or an official schedule lookup. Verify before using a call number in the catalogue.</i>';
- $('useClassSuggestion').hidden=!draft||scheme==='OTHER'||draft==='Manual review required';
+ $('useClassSuggestion').hidden=!draft||scheme==='OTHER'||draft==='Manual review required'||!$('bookModal').classList.contains('open');
 };
 $('useClassSuggestion').onclick=()=>{
  if(!currentClassDraft){toast('Generate a suggestion first.');return}
